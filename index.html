@@ -3,25 +3,62 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="color-scheme" content="light dark" />
 	<title>Worldpop — World population, 300,000 BCE – today</title>
+	<link rel="stylesheet" href="https://msturm.com/custom_subset.css" />
 	<style>
 		:root {
-			--ink: #1c1917;
-			--muted: #57534e;
-			--line: #d6d3d1;
-			--paper: #f6f1e8;
-			--card: #fffdf8;
-			--accent: #1d4e89;
-			--paleo: #7c7468;
+			--background-color: #fff;
+			--bg-0: #f0f0f0;
+			--bg-2: #fefefe;
+			--hover-color: white;
+			--primary-color: #24f;
+			--divider-color: #aaa;
+			--text-color: #222;
+			--text-color-high-contrast: #000;
+			--meta-color: #5b5b65;
+			--sans-serif-font: "Inter Subset", Inter, Helvetica, Arial, sans-serif;
+			color-scheme: light;
+		}
+
+		@media (prefers-color-scheme: dark) {
+			:root {
+				--background-color: #111;
+				--bg-0: #2f2f2f;
+				--bg-2: #171717;
+				--hover-color: black;
+				--primary-color: #bf5;
+				--divider-color: #444;
+				--text-color: #fff;
+				--text-color-high-contrast: #fff;
+				--meta-color: #b0b0b0;
+				color-scheme: dark;
+			}
 		}
 
 		* { box-sizing: border-box; }
 		html, body { margin: 0; min-height: 100%; }
+		html {
+			background-color: var(--background-color);
+			color: var(--text-color);
+			text-rendering: optimizeLegibility;
+		}
 		body {
-			font-family: "Source Sans 3", "Segoe UI", Helvetica, Arial, sans-serif;
-			background: var(--paper);
-			color: var(--ink);
-			line-height: 1.45;
+			font-family: var(--sans-serif-font);
+			background: var(--background-color);
+			color: var(--text-color);
+			line-height: 1.6;
+		}
+
+		a {
+			color: var(--primary-color);
+			text-decoration: none;
+			border-bottom: 1px solid var(--primary-color);
+		}
+
+		a:hover {
+			background-color: var(--primary-color);
+			color: var(--hover-color);
 		}
 
 		header {
@@ -32,24 +69,26 @@
 
 		header p.kicker {
 			margin: 0 0 0.35rem;
-			letter-spacing: 0.14em;
-			font-size: 0.72rem;
-			color: var(--muted);
+			font-size: 0.82rem;
+			font-weight: 600;
+			color: var(--primary-color);
 		}
 
 		h1 {
-			font-family: Palatino, "Palatino Linotype", "Iowan Old Style", Georgia, serif;
-			font-weight: 600;
-			font-size: clamp(1.8rem, 4vw, 2.6rem);
+			font-family: var(--sans-serif-font);
+			font-weight: 800;
+			font-size: clamp(1.8rem, 4vw, 2rem);
 			margin: 0 0 0.4rem;
-			letter-spacing: -0.02em;
+			line-height: 1.25;
+			color: var(--text-color-high-contrast);
 		}
 
 		header .lede {
 			max-width: 46rem;
-			color: var(--muted);
+			color: var(--meta-color);
 			margin: 0;
-			font-size: 1.05rem;
+			font-size: 1.02rem;
+			font-weight: 300;
 		}
 
 		main {
@@ -66,8 +105,8 @@
 		}
 
 		.stat {
-			background: var(--card);
-			border: 1px solid var(--line);
+			background: var(--bg-2);
+			border: 1px solid var(--divider-color);
 			padding: 0.9rem 1rem 0.85rem;
 		}
 
@@ -75,24 +114,26 @@
 			font-size: 0.72rem;
 			letter-spacing: 0.08em;
 			text-transform: uppercase;
-			color: var(--muted);
+			color: var(--meta-color);
 		}
 
 		.stat .value {
-			font-family: Palatino, "Palatino Linotype", Georgia, serif;
+			font-family: var(--sans-serif-font);
+			font-weight: 700;
 			font-size: 1.45rem;
 			margin-top: 0.2rem;
+			color: var(--text-color-high-contrast);
 		}
 
 		.stat .note {
 			font-size: 0.8rem;
-			color: var(--muted);
+			color: var(--meta-color);
 			margin-top: 0.15rem;
 		}
 
 		.panel {
-			background: var(--card);
-			border: 1px solid var(--line);
+			background: var(--bg-2);
+			border: 1px solid var(--divider-color);
 			padding: 0.85rem 0.85rem 0.4rem;
 		}
 
@@ -106,24 +147,29 @@
 
 		.toolbar span {
 			font-size: 0.78rem;
-			color: var(--muted);
+			color: var(--meta-color);
 			margin-right: 0.25rem;
 		}
 
 		button.range {
-			border: 1px solid var(--line);
+			border: 1px solid var(--divider-color);
 			background: transparent;
-			color: var(--ink);
+			color: var(--text-color);
 			padding: 0.28rem 0.7rem;
 			font: inherit;
 			font-size: 0.85rem;
 			cursor: pointer;
 		}
 
+		button.range:hover {
+			border-color: var(--primary-color);
+			color: var(--primary-color);
+		}
+
 		button.range[aria-pressed="true"] {
-			background: var(--accent);
-			border-color: var(--accent);
-			color: #fff;
+			background: var(--primary-color);
+			border-color: var(--primary-color);
+			color: var(--hover-color);
 		}
 
 		#chart {
@@ -141,27 +187,31 @@
 		.chart-tooltip {
 			position: absolute;
 			pointer-events: none;
-			background: #fffdf8;
-			border: 1px solid var(--line);
+			background: var(--bg-2);
+			border: 1px solid var(--divider-color);
 			padding: 0.45rem 0.6rem;
 			font-size: 0.82rem;
-			color: var(--ink);
+			color: var(--text-color);
 			max-width: 220px;
 			z-index: 2;
 		}
 
 		.chart-tooltip em {
-			color: var(--muted);
+			color: var(--meta-color);
 			font-style: normal;
 		}
 
 		.status {
 			padding: 0.4rem 0.55rem 0.85rem;
 			font-size: 0.85rem;
-			color: var(--muted);
+			color: var(--meta-color);
 		}
 
-		.status.error { color: #9f1239; }
+		.status.error { color: #d8292e; }
+
+		@media (prefers-color-scheme: dark) {
+			.status.error { color: #e74f54; }
+		}
 
 		.milestones {
 			margin-top: 1.25rem;
@@ -171,9 +221,11 @@
 		}
 
 		h2 {
-			font-family: Palatino, "Palatino Linotype", Georgia, serif;
-			font-size: 1.2rem;
+			font-family: var(--sans-serif-font);
+			font-weight: 700;
+			font-size: 1.1em;
 			margin: 0 0 0.6rem;
+			color: var(--text-color-high-contrast);
 		}
 
 		table {
@@ -185,7 +237,7 @@
 		th, td {
 			text-align: left;
 			padding: 0.45rem 0.35rem;
-			border-bottom: 1px solid var(--line);
+			border-bottom: 0.5px solid var(--divider-color);
 			vertical-align: top;
 		}
 
@@ -193,14 +245,14 @@
 			font-size: 0.72rem;
 			letter-spacing: 0.08em;
 			text-transform: uppercase;
-			color: var(--muted);
+			color: var(--meta-color);
 			font-weight: 600;
 		}
 
 		td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 		.sources {
-			color: var(--muted);
+			color: var(--meta-color);
 			font-size: 0.86rem;
 		}
 
@@ -256,6 +308,10 @@
 			<div class="sources">
 				<h2>Sources</h2>
 				<div id="source-list"></div>
+				<p>
+					Code for this page is on
+					<a href="https://github.com/matthiassturm/worldpop">GitHub</a>.
+				</p>
 			</div>
 		</section>
 	</main>

@@ -85,6 +85,10 @@ function renderMilestones(data) {
 		data.sources.map((text) => `<p>${text}</p>`).join("");
 }
 
+function themeColor(name) {
+	return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
 function drawChart(data, rangeKey) {
 	const range = RANGES[rangeKey];
 	const yAxis = logAxisForVisible(data, range.x);
@@ -99,7 +103,7 @@ function drawChart(data, rangeKey) {
 		series: [
 			{
 				name: "Paleolithic estimates",
-				color: "#7c7468",
+				color: themeColor("--meta-color"),
 				dashed: true,
 				markers: true,
 				width: 2,
@@ -107,7 +111,7 @@ function drawChart(data, rangeKey) {
 			},
 			{
 				name: "Historical series",
-				color: "#1d4e89",
+				color: themeColor("--primary-color"),
 				width: 2.4,
 				points: data.historical,
 			},
@@ -146,5 +150,8 @@ function load() {
 
 load();
 window.addEventListener("resize", () => {
+	if (payload) drawChart(payload, currentRange);
+});
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
 	if (payload) drawChart(payload, currentRange);
 });

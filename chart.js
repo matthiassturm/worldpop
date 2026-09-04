@@ -11,7 +11,23 @@ function compactFigure(n) {
 	return String(+n.toFixed(2));
 }
 
+function chartTheme() {
+	const css = getComputedStyle(document.documentElement);
+	const token = (name) => css.getPropertyValue(name).trim();
+	return {
+		bg: token("--bg-2") || token("--background-color"),
+		text: token("--text-color"),
+		high: token("--text-color-high-contrast"),
+		meta: token("--meta-color"),
+		divider: token("--divider-color"),
+		primary: token("--primary-color"),
+		grid: token("--bg-0"),
+		font: token("--sans-serif-font") || '"Inter Subset", Inter, Helvetica, Arial, sans-serif',
+	};
+}
+
 function drawLogChart(container, spec) {
+	const theme = chartTheme();
 	const width = container.clientWidth || 900;
 	const height = container.clientHeight || 560;
 	const margin = { top: 44, right: 28, bottom: 64, left: 78 };
@@ -48,30 +64,30 @@ function drawLogChart(container, spec) {
 	};
 
 	svg.appendChild(el("rect", {
-		x: 0, y: 0, width, height, fill: "#fffdf8",
+		x: 0, y: 0, width, height, fill: theme.bg,
 	}));
 
 	svg.appendChild(label(spec.title, {
 		x: margin.left,
 		y: 22,
-		fill: "#44403c",
+		fill: theme.text,
 		"font-size": "14",
-		"font-family": "Palatino, Georgia, serif",
+		"font-family": theme.font,
 	}));
 
 	for (const tick of spec.yTicks) {
 		const y = yScale(tick.value);
 		svg.appendChild(el("line", {
 			x1: margin.left, x2: margin.left + innerW, y1: y, y2: y,
-			stroke: "#eee8dd",
+			stroke: theme.grid,
 		}));
 		svg.appendChild(label(tick.text, {
 			x: margin.left - 8,
 			y: y + 4,
-			fill: "#57534e",
+			fill: theme.meta,
 			"font-size": "11",
 			"text-anchor": "end",
-			"font-family": "Segoe UI, Helvetica, sans-serif",
+			"font-family": theme.font,
 		}));
 	}
 
@@ -88,27 +104,27 @@ function drawLogChart(container, spec) {
 		const x = tick.x;
 		svg.appendChild(el("line", {
 			x1: x, x2: x, y1: margin.top, y2: margin.top + innerH,
-			stroke: "#f3eee4",
+			stroke: theme.grid,
 		}));
 		svg.appendChild(label(tick.text, {
 			x,
 			y: margin.top + innerH + 18,
-			fill: "#57534e",
+			fill: theme.meta,
 			"font-size": "11",
 			"text-anchor": "middle",
-			"font-family": "Segoe UI, Helvetica, sans-serif",
+			"font-family": theme.font,
 		}));
 	}
 
 	svg.appendChild(el("line", {
 		x1: margin.left, x2: margin.left + innerW,
 		y1: margin.top + innerH, y2: margin.top + innerH,
-		stroke: "#d6d3d1",
+		stroke: theme.divider,
 	}));
 	svg.appendChild(el("line", {
 		x1: margin.left, x2: margin.left,
 		y1: margin.top, y2: margin.top + innerH,
-		stroke: "#d6d3d1",
+		stroke: theme.divider,
 	}));
 
 	const defs = el("defs");
@@ -124,16 +140,18 @@ function drawLogChart(container, spec) {
 	svg.appendChild(label("Year (inverse log — recent years expanded)", {
 		x: margin.left + innerW / 2,
 		y: height - 14,
-		fill: "#44403c",
+		fill: theme.meta,
 		"font-size": "12",
 		"text-anchor": "middle",
+		"font-family": theme.font,
 	}));
 	const yTitle = label("People", {
 		x: 16,
 		y: margin.top + innerH / 2,
-		fill: "#44403c",
+		fill: theme.meta,
 		"font-size": "12",
 		"text-anchor": "middle",
+		"font-family": theme.font,
 		transform: `rotate(-90 16 ${margin.top + innerH / 2})`,
 	});
 	svg.appendChild(yTitle);
@@ -178,19 +196,20 @@ function drawLogChart(container, spec) {
 		const y = yScale(note.population);
 		svg.appendChild(el("line", {
 			x1: x, y1: y, x2: x + 14, y2: y - 22,
-			stroke: "#a8a29e",
+			stroke: theme.meta,
 		}));
 		const bg = el("rect", {
 			x: x + 16,
 			y: y - 34,
 			rx: 2,
-			fill: "rgba(255,253,248,0.92)",
+			fill: theme.bg,
 		});
 		const text = label(note.title, {
 			x: x + 20,
 			y: y - 20,
-			fill: "#44403c",
+			fill: theme.text,
 			"font-size": "11",
+			"font-family": theme.font,
 		});
 		svg.appendChild(bg);
 		svg.appendChild(text);
@@ -214,16 +233,17 @@ function drawLogChart(container, spec) {
 		svg.appendChild(label(series.name, {
 			x: legendX + 24,
 			y: legendY + 4,
-			fill: "#44403c",
+			fill: theme.text,
 			"font-size": "12",
+			"font-family": theme.font,
 		}));
 		legendX += 28 + series.name.length * 7;
 	}
 
 	const hoverLine = el("line", {
-		y1: margin.top, y2: margin.top + innerH, stroke: "#a8a29e", "stroke-width": "1", visibility: "hidden",
+		y1: margin.top, y2: margin.top + innerH, stroke: theme.meta, "stroke-width": "1", visibility: "hidden",
 	});
-	const hoverDot = el("circle", { r: 5, fill: "#1d4e89", visibility: "hidden" });
+	const hoverDot = el("circle", { r: 5, fill: theme.primary, visibility: "hidden" });
 	svg.appendChild(hoverLine);
 	svg.appendChild(hoverDot);
 
