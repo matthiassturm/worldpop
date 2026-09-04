@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Worldpop — World population, 300,000 BCE – today</title>
+	<style>
+		:root {
+			--ink: #1c1917;
+			--muted: #57534e;
+			--line: #d6d3d1;
+			--paper: #f6f1e8;
+			--card: #fffdf8;
+			--accent: #1d4e89;
+			--paleo: #7c7468;
+		}
+
+		* { box-sizing: border-box; }
+		html, body { margin: 0; min-height: 100%; }
+		body {
+			font-family: "Source Sans 3", "Segoe UI", Helvetica, Arial, sans-serif;
+			background: var(--paper);
+			color: var(--ink);
+			line-height: 1.45;
+		}
+
+		header {
+			padding: 2rem 1.5rem 0.75rem;
+			max-width: 1120px;
+			margin: 0 auto;
+		}
+
+		header p.kicker {
+			margin: 0 0 0.35rem;
+			letter-spacing: 0.14em;
+			font-size: 0.72rem;
+			color: var(--muted);
+		}
+
+		h1 {
+			font-family: Palatino, "Palatino Linotype", "Iowan Old Style", Georgia, serif;
+			font-weight: 600;
+			font-size: clamp(1.8rem, 4vw, 2.6rem);
+			margin: 0 0 0.4rem;
+			letter-spacing: -0.02em;
+		}
+
+		header .lede {
+			max-width: 46rem;
+			color: var(--muted);
+			margin: 0;
+			font-size: 1.05rem;
+		}
+
+		main {
+			max-width: 1120px;
+			margin: 0 auto;
+			padding: 1.25rem 1.5rem 3rem;
+		}
+
+		.stats {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 0.75rem;
+			margin-bottom: 1.1rem;
+		}
+
+		.stat {
+			background: var(--card);
+			border: 1px solid var(--line);
+			padding: 0.9rem 1rem 0.85rem;
+		}
+
+		.stat .label {
+			font-size: 0.72rem;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: var(--muted);
+		}
+
+		.stat .value {
+			font-family: Palatino, "Palatino Linotype", Georgia, serif;
+			font-size: 1.45rem;
+			margin-top: 0.2rem;
+		}
+
+		.stat .note {
+			font-size: 0.8rem;
+			color: var(--muted);
+			margin-top: 0.15rem;
+		}
+
+		.panel {
+			background: var(--card);
+			border: 1px solid var(--line);
+			padding: 0.85rem 0.85rem 0.4rem;
+		}
+
+		.toolbar {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.45rem;
+			align-items: center;
+			padding: 0.15rem 0.4rem 0.7rem;
+		}
+
+		.toolbar span {
+			font-size: 0.78rem;
+			color: var(--muted);
+			margin-right: 0.25rem;
+		}
+
+		button.range {
+			border: 1px solid var(--line);
+			background: transparent;
+			color: var(--ink);
+			padding: 0.28rem 0.7rem;
+			font: inherit;
+			font-size: 0.85rem;
+			cursor: pointer;
+		}
+
+		button.range[aria-pressed="true"] {
+			background: var(--accent);
+			border-color: var(--accent);
+			color: #fff;
+		}
+
+		#chart {
+			width: 100%;
+			height: 560px;
+			position: relative;
+		}
+
+		#chart svg {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+
+		.chart-tooltip {
+			position: absolute;
+			pointer-events: none;
+			background: #fffdf8;
+			border: 1px solid var(--line);
+			padding: 0.45rem 0.6rem;
+			font-size: 0.82rem;
+			color: var(--ink);
+			max-width: 220px;
+			z-index: 2;
+		}
+
+		.chart-tooltip em {
+			color: var(--muted);
+			font-style: normal;
+		}
+
+		.status {
+			padding: 0.4rem 0.55rem 0.85rem;
+			font-size: 0.85rem;
+			color: var(--muted);
+		}
+
+		.status.error { color: #9f1239; }
+
+		.milestones {
+			margin-top: 1.25rem;
+			display: grid;
+			grid-template-columns: 1.4fr 1fr;
+			gap: 1rem;
+		}
+
+		h2 {
+			font-family: Palatino, "Palatino Linotype", Georgia, serif;
+			font-size: 1.2rem;
+			margin: 0 0 0.6rem;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 0.92rem;
+		}
+
+		th, td {
+			text-align: left;
+			padding: 0.45rem 0.35rem;
+			border-bottom: 1px solid var(--line);
+			vertical-align: top;
+		}
+
+		th {
+			font-size: 0.72rem;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: var(--muted);
+			font-weight: 600;
+		}
+
+		td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+		.sources {
+			color: var(--muted);
+			font-size: 0.86rem;
+		}
+
+		.sources p { margin: 0 0 0.55rem; }
+
+		@media (max-width: 860px) {
+			.stats, .milestones { grid-template-columns: 1fr 1fr; }
+			#chart { height: 420px; }
+		}
+
+		@media (max-width: 560px) {
+			.stats, .milestones { grid-template-columns: 1fr; }
+		}
+	</style>
+	<script src="chart.js"></script>
+</head>
+
+<body>
+	<header>
+		<p class="kicker">Worldpop</p>
+		<h1>World population from the beginning of humans to today</h1>
+		<p class="lede">
+			Estimates from Our World in Data and the UN, plotted on a log scale so
+			200,000 hunter-gatherers and 8 billion people can share one chart.
+		</p>
+	</header>
+
+	<main>
+		<section class="stats" id="stats" hidden></section>
+
+		<section class="panel">
+			<div class="toolbar">
+				<span>Time range</span>
+				<button class="range" data-range="all" aria-pressed="false">All human history</button>
+				<button class="range" data-range="agriculture" aria-pressed="false">Since agriculture</button>
+				<button class="range" data-range="ce" aria-pressed="true">Since year 1</button>
+				<button class="range" data-range="modern" aria-pressed="false">Since 1800</button>
+			</div>
+			<div id="chart"></div>
+			<p class="status" id="status">Loading population series…</p>
+		</section>
+
+		<section class="milestones">
+			<div>
+				<h2>Milestones</h2>
+				<table>
+					<thead>
+						<tr><th>When</th><th>People</th><th>What changed</th></tr>
+					</thead>
+					<tbody id="milestone-rows"></tbody>
+				</table>
+			</div>
+			<div class="sources">
+				<h2>Sources</h2>
+				<div id="source-list"></div>
+			</div>
+		</section>
+	</main>
+
+	<script src="population.js"></script>
+	<script src="app.js"></script>
+</body>
+</html>
